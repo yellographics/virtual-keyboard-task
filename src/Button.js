@@ -1,8 +1,12 @@
 export default class Button {
-  constructor({ name, ru, en }) {
+  constructor({
+    name, ru, en, enShift, ruShift,
+  }) {
     this.name = name;
     this.ru = ru;
     this.en = en;
+    this.enShift = enShift;
+    this.ruShift = ruShift;
   }
 
   className() {

@@ -1,18 +1,44 @@
 // eslint-disable-next-line import/prefer-default-export
 export const btnArray = [
-  { name: 'Backquote', ru: 'ё', en: '`' },
-  { name: 'Digit1', ru: '1', en: '1' },
-  { name: 'Digit2', ru: '2', en: '2' },
-  { name: 'Digit3', ru: '3', en: '3' },
-  { name: 'Digit4', ru: '4', en: '4' },
-  { name: 'Digit5', ru: '5', en: '5' },
-  { name: 'Digit6', ru: '6', en: '6' },
-  { name: 'Digit7', ru: '7', en: '7' },
-  { name: 'Digit8', ru: '8', en: '8' },
-  { name: 'Digit9', ru: '9', en: '9' },
-  { name: 'Digit0', ru: '0', en: '0' },
-  { name: 'Minus', ru: '-', en: '-' },
-  { name: 'Equal', ru: '=', en: '=' },
+  {
+    name: 'Backquote', ru: 'ё', en: '`', ruShift: '~', enShift: '~',
+  },
+  {
+    name: 'Digit1', ru: '1', en: '1', ruShift: '!', enShift: '!',
+  },
+  {
+    name: 'Digit2', ru: '2', en: '2', ruShift: '"', enShift: '@',
+  },
+  {
+    name: 'Digit3', ru: '3', en: '3', ruShift: '№', enShift: '#',
+  },
+  {
+    name: 'Digit4', ru: '4', en: '4', ruShift: ';', enShift: '$',
+  },
+  {
+    name: 'Digit5', ru: '5', en: '5', ruShift: '%', enShift: '%',
+  },
+  {
+    name: 'Digit6', ru: '6', en: '6', ruShift: ':', enShift: '^',
+  },
+  {
+    name: 'Digit7', ru: '7', en: '7', ruShift: '?', enShift: '&',
+  },
+  {
+    name: 'Digit8', ru: '8', en: '8', ruShift: '*', enShift: '*',
+  },
+  {
+    name: 'Digit9', ru: '9', en: '9', ruShift: '(', enShift: '(',
+  },
+  {
+    name: 'Digit0', ru: '0', en: '0', ruShift: ')', enShift: ')',
+  },
+  {
+    name: 'Minus', ru: '-', en: '-', ruShift: '_', enShift: '_',
+  },
+  {
+    name: 'Equal', ru: '=', en: '=', ruShift: '+', enShift: '+',
+  },
   { name: 'Backspace', ru: 'Backspace', en: 'Backspace' },
   { name: 'Tab', ru: 'Tab', en: 'Tab' },
   { name: 'KeyQ', ru: 'й', en: 'q' },
@@ -25,9 +51,15 @@ export const btnArray = [
   { name: 'KeyI', ru: 'ш', en: 'i' },
   { name: 'KeyO', ru: 'щ', en: 'o' },
   { name: 'KeyP', ru: 'з', en: 'p' },
-  { name: 'BracketLeft', ru: 'х', en: '[' },
-  { name: 'BracketRight', ru: 'ъ', en: ']' },
-  { name: 'Backslash', ru: '\\', en: '\\' },
+  {
+    name: 'BracketLeft', ru: 'х', en: '[', enShift: '{',
+  },
+  {
+    name: 'BracketRight', ru: 'ъ', en: ']', enShift: '}',
+  },
+  {
+    name: 'Backslash', ru: '\\', en: '\\', ruShift: '/', enShift: '|',
+  },
   { name: 'Delete', ru: 'Delete', en: 'Delete' },
   { name: 'CapsLock', ru: 'CapsLock', en: 'CapsLock' },
   { name: 'KeyA', ru: 'ф', en: 'a' },
@@ -39,8 +71,12 @@ export const btnArray = [
   { name: 'KeyJ', ru: 'о', en: 'j' },
   { name: 'KeyK', ru: 'л', en: 'k' },
   { name: 'KeyL', ru: 'д', en: 'l' },
-  { name: 'Semicolon', ru: 'ж', en: ';' },
-  { name: 'Quote', ru: 'э', en: '\'' },
+  {
+    name: 'Semicolon', ru: 'ж', en: ';', enShift: ':',
+  },
+  {
+    name: 'Quote', ru: 'э', en: '\'\'', enShift: '"',
+  },
   { name: 'Enter', ru: 'Enter', en: 'Enter' },
   { name: 'ShiftLeft', ru: 'Shift', en: 'Shift' },
   { name: 'KeyZ', ru: 'я', en: 'z' },
@@ -50,9 +86,15 @@ export const btnArray = [
   { name: 'KeyB', ru: 'и', en: 'b' },
   { name: 'KeyN', ru: 'т', en: 'n' },
   { name: 'KeyM', ru: 'ь', en: 'm' },
-  { name: 'Comma', ru: 'б', en: ',' },
-  { name: 'Period', ru: 'ю', en: '.' },
-  { name: 'Slash', ru: '.', en: '/' },
+  {
+    name: 'Comma', ru: 'б', en: ',', enShift: '<',
+  },
+  {
+    name: 'Period', ru: 'ю', en: '.', enShift: '>',
+  },
+  {
+    name: 'Slash', ru: '.', en: '/', ruShift: ',', enShift: '?',
+  },
   { name: 'ArrowUp', ru: '&#8593;', en: '&#8593;' },
   { name: 'ShiftRight', ru: 'Shift', en: 'Shift' },
   { name: 'ControlLeft', ru: 'Ctrl', en: 'Ctrl' },

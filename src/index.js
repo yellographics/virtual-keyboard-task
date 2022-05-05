@@ -22,10 +22,19 @@ pageElements.forEach((elem) => drawElement(elem));
 const keyboardFromPage = document.querySelector('#keyboard');
 
 // создаем функцию рендера кнопок внутри клавиатуры и рендерим ее
-function renderKeyboard(buttonsObj) {
-  buttonsObj.forEach((button) => {
-    keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[lang]}</div>`;
-  });
+function renderKeyboard(buttonsObj, shift = false) {
+  if (shift === true) {
+    const langShift = `${lang}Shift`;
+    keyboardFromPage.innerHTML = '';
+    buttonsObj.forEach((button) => {
+      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift] ? button[langShift] : button[lang].toUpperCase()}</div>`;
+    });
+  } else {
+    keyboardFromPage.innerHTML = '';
+    buttonsObj.forEach((button) => {
+      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[lang]}</div>`;
+    });
+  }
 }
 
 renderKeyboard(btnObjs);
@@ -39,7 +48,7 @@ inputFieldFromHTML.value = '';
 let currentPressedVirtual = null;
 let currentPressedReal = null;
 
-// функция клика по виртуальной кнопке
+// функция клика по кнопке
 function clickOnButton(button) {
   if (button.target) {
     if (button.target.hasAttribute('data-name')) {
@@ -49,6 +58,7 @@ function clickOnButton(button) {
     }
   } else {
     button.classList.add('button-active');
+    inputFieldFromHTML.value += button.innerText;
   }
 }
 
@@ -67,6 +77,7 @@ keyboardFromPage.addEventListener('mouseup', () => {
 });
 
 document.addEventListener('keydown', (event) => {
+  event.preventDefault();
   currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
   clickOnButton(currentPressedReal);
 });
