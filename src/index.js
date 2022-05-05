@@ -25,11 +25,38 @@ btnArray.forEach((buttonEl) => {
 const keyboardFromPage = document.querySelector('#keyboard');
 const lang = 'ru';
 
-function renderKeyboard(buttons) {
-  // const keyboard = document.querySelector('#keyboard');
-  buttons.forEach((button) => {
-    keyboardFromPage.innerHTML += `<div class="${button.className}">${lang === 'ru' ? button.ru : button.en}</div>`;
+function renderKeyboard(buttonsObj) {
+  buttonsObj.forEach((button) => {
+    keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[lang]}</div>`;
   });
 }
 
 renderKeyboard(btnObjs);
+const inputFieldFromHTML = document.querySelector('.input');
+inputFieldFromHTML.value = '';
+
+let currentPressed = '';
+
+keyboardFromPage.addEventListener('mousedown', (event) => {
+  if (event.target.hasAttribute('data-name')) {
+    currentPressed = event.target;
+    event.target.classList.add('button-active');
+    inputFieldFromHTML.value += event.target.innerText;
+  }
+});
+
+keyboardFromPage.addEventListener('mouseup', () => {
+  currentPressed.classList.remove('button-active');
+});
+
+document.addEventListener('keydown', (event) => {
+  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
+  const pressedButton = buttons.find((item) => item.dataset.name === event.code);
+  pressedButton.classList.add('button-active');
+});
+
+document.addEventListener('keyup', (event) => {
+  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
+  const pressedButton = buttons.find((item) => item.dataset.name === event.code);
+  pressedButton.classList.remove('button-active');
+});

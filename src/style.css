@@ -36,6 +36,17 @@ h1, .info {
     height: 50px; 
 }
 
+.button:hover {
+    box-shadow: 0 0.5em 0.5em -0.4em blue;    
+    cursor: pointer;
+}
+
+.button-active {
+    transform: scale(0.9);
+    background-color: rgba(0,0,255, 0.1);   
+    transition-duration: 0.3s;  
+}
+
 .button-squared {
     width: 50px;       
 }
