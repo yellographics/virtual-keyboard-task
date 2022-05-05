@@ -25,6 +25,7 @@ h1, .info {
     height: 200px;
     border: 1px solid grey;
     border-radius: 3px;
+    resize: none;
 }
 
 .button {
