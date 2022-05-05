@@ -11,7 +11,7 @@ const lang = 'ru';
 const keyboard = new Keyboard('keyboard');
 const keyboardHTML = keyboard.createKeyboard();
 
-const inputField = '<textarea class="input"></textarea>';
+const inputField = '<textarea class="input" autofocus></textarea>';
 const h1 = '<h1>Virtual Keyboard</h1>';
 const info = '<p>This keyboard is created in Windows.<br> To swicth languages use <b>LeftShift+LeftCtrl</b></p>';
 
@@ -57,6 +57,7 @@ function unclickButton(button) {
   button.classList.remove('button-active');
 }
 
+// слушатели на события с виртуальной и реальной клавиатуры
 keyboardFromPage.addEventListener('mousedown', (event) => {
   clickOnButton(event);
 });
