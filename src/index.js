@@ -2,13 +2,15 @@ import './style.css';
 
 import Keyboard from './Keyboard';
 import drawElement from './drawElement';
-import { btnArray } from './buttons';
-import Button from './Button';
+import btnObjs from './buttonObjects';
 
+// задаем язык (пока захардкожено, после нужно будет подгружать из кэша)
+const lang = 'ru';
+
+// создаем клавиатуру и рисуем все элементы для страницы
 const keyboard = new Keyboard('keyboard');
-const btnObjs = [];
-
 const keyboardHTML = keyboard.createKeyboard();
+
 const inputField = '<textarea class="input"></textarea>';
 const h1 = '<h1>Virtual Keyboard</h1>';
 const info = '<p>This keyboard is created in Windows.<br> To swicth languages use <b>LeftShift+LeftCtrl</b></p>';
@@ -16,15 +18,10 @@ const info = '<p>This keyboard is created in Windows.<br> To swicth languages us
 const pageElements = [h1, inputField, keyboardHTML, info];
 pageElements.forEach((elem) => drawElement(elem));
 
-btnArray.forEach((buttonEl) => {
-  const button = new Button(buttonEl);
-  button.className();
-  btnObjs.push(button);
-});
-
+// находим клавиатуру на странице
 const keyboardFromPage = document.querySelector('#keyboard');
-const lang = 'ru';
 
+// создаем функцию рендера кнопок внутри клавиатуры и рендерим ее
 function renderKeyboard(buttonsObj) {
   buttonsObj.forEach((button) => {
     keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[lang]}</div>`;
@@ -32,6 +29,9 @@ function renderKeyboard(buttonsObj) {
 }
 
 renderKeyboard(btnObjs);
+
+// работа с виртуальной клавиатурой
+
 const inputFieldFromHTML = document.querySelector('.input');
 inputFieldFromHTML.value = '';
 
