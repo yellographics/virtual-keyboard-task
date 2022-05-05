@@ -31,32 +31,46 @@ function renderKeyboard(buttonsObj) {
 renderKeyboard(btnObjs);
 
 // работа с виртуальной клавиатурой
-
+const buttons = Array.from(document.querySelectorAll('div[data-name]'));
 const inputFieldFromHTML = document.querySelector('.input');
 inputFieldFromHTML.value = '';
 
-let currentPressed = '';
+// переменная для отслеживания нажатой с виртуальной и реальной клавиатур
+let currentPressedVirtual = null;
+let currentPressedReal = null;
+
+// функция клика по виртуальной кнопке
+function clickOnButton(button) {
+  if (button.target) {
+    if (button.target.hasAttribute('data-name')) {
+      currentPressedVirtual = button.target;
+      button.target.classList.add('button-active');
+      inputFieldFromHTML.value += button.target.innerText;
+    }
+  } else {
+    button.classList.add('button-active');
+  }
+}
+
+// функция отжатия кнопки
+function unclickButton(button) {
+  button.classList.remove('button-active');
+}
 
 keyboardFromPage.addEventListener('mousedown', (event) => {
-  if (event.target.hasAttribute('data-name')) {
-    currentPressed = event.target;
-    event.target.classList.add('button-active');
-    inputFieldFromHTML.value += event.target.innerText;
-  }
+  clickOnButton(event);
 });
 
 keyboardFromPage.addEventListener('mouseup', () => {
-  currentPressed.classList.remove('button-active');
+  unclickButton(currentPressedVirtual);
 });
 
 document.addEventListener('keydown', (event) => {
-  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
-  const pressedButton = buttons.find((item) => item.dataset.name === event.code);
-  pressedButton.classList.add('button-active');
+  currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
+  clickOnButton(currentPressedReal);
 });
 
 document.addEventListener('keyup', (event) => {
-  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
-  const pressedButton = buttons.find((item) => item.dataset.name === event.code);
-  pressedButton.classList.remove('button-active');
+  currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
+  unclickButton(currentPressedReal);
 });
