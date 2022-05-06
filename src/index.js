@@ -23,11 +23,11 @@ const keyboardFromPage = document.querySelector('#keyboard');
 
 // создаем функцию рендера кнопок внутри клавиатуры и рендерим ее
 function renderKeyboard(buttonsObj, action) {
-  if (action === 'Shift') {
+  if (action === 'shift') {
     const langShift = `${lang}Shift`;
     keyboardFromPage.innerHTML = '';
     buttonsObj.forEach((button) => {
-      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift] ? button[langShift] : button[lang].toUpperCase()}</div>`;
+      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift] ? button[langShift] : button.name.startsWith('Key') ? button[lang].toUpperCase() : button[lang]}</div>`;
     });
   } else if (action === 'capslock') {
     keyboardFromPage.innerHTML = '';
@@ -96,8 +96,9 @@ function clickOnButton(button) {
     inputFieldFromHTML.value = inputString.join('');
     inputFieldFromHTML.focus();
     inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
-  } else if (button.dataset.name === 'ShiftLeft') {
-    isLeftShift = true;
+  } else if (button.dataset.name === 'ShiftLeft' || button.dataset.name === 'ShiftRight') {
+    if (button.dataset.name === 'ShiftLeft') { isLeftShift = true; }
+    renderKeyboard(btnObjs, 'shift');
   } else if (button.dataset.name === 'ControlLeft' && isLeftShift) {
     if (lang === 'ru') {
       lang = 'en';
@@ -130,8 +131,11 @@ function clickOnButton(button) {
 // функция отжатия кнопки
 function unclickButton(button) {
   button.classList.remove('button-active');
-  if (button.dataset.name === 'ShiftLeft') {
-    isLeftShift = false;
+  if (button.dataset.name === 'ShiftLeft' || button.dataset.name === 'ShiftRight') {
+    if(button.dataset.name === 'ShiftLeft'){
+      isLeftShift = false;
+    }
+    renderKeyboard(btnObjs);
   }
 }
 
