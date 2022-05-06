@@ -5,7 +5,7 @@ import drawElement from './drawElement';
 import btnObjs from './buttonObjects';
 
 // задаем язык (пока захардкожено, после нужно будет подгружать из кэша)
-const lang = 'ru';
+const lang = 'en';
 
 // создаем клавиатуру и рисуем все элементы для страницы
 const keyboard = new Keyboard('keyboard');
@@ -50,15 +50,38 @@ let currentPressedReal = null;
 
 // функция клика по кнопке
 function clickOnButton(button) {
-  if (button.target) {
-    if (button.target.hasAttribute('data-name')) {
-      currentPressedVirtual = button.target;
-      button.target.classList.add('button-active');
-      inputFieldFromHTML.value += button.target.innerText;
+  button.classList.add('button-active');
+  if (button.dataset.name === 'Space') {
+    const inputString = inputFieldFromHTML.value.split('');
+    const { selectionStart } = inputFieldFromHTML;
+    inputString.splice(selectionStart, 0, ' ');
+    inputFieldFromHTML.value = inputString.join('');
+    inputFieldFromHTML.focus();
+    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);    
+  } else if (button.dataset.name === 'Enter') {
+    const inputString = inputFieldFromHTML.value.split('');
+    const { selectionStart } = inputFieldFromHTML;
+    inputString.splice(selectionStart, 0, '\r\n');
+    inputFieldFromHTML.value = inputString.join('');
+    inputFieldFromHTML.focus();
+    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1); 
+    //inputFieldFromHTML.value += '\r\n';
+  } else if (button.dataset.name === 'Backspace') {
+    const inputString = inputFieldFromHTML.value.split('');
+    const { selectionStart } = inputFieldFromHTML;
+    if (selectionStart > 0) {
+      inputString.splice(selectionStart - 1, 1);
+      inputFieldFromHTML.value = inputString.join('');
+      inputFieldFromHTML.focus();
+      inputFieldFromHTML.setSelectionRange(selectionStart - 1, selectionStart - 1);
     }
   } else {
-    button.classList.add('button-active');
-    inputFieldFromHTML.value += button.innerText;
+    const inputString = inputFieldFromHTML.value.split('');
+    const { selectionStart } = inputFieldFromHTML;
+    inputString.splice(selectionStart, 0, button.innerText);
+    inputFieldFromHTML.value = inputString.join('');
+    inputFieldFromHTML.focus();
+    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
   }
 }
 
@@ -69,7 +92,10 @@ function unclickButton(button) {
 
 // слушатели на события с виртуальной и реальной клавиатуры
 keyboardFromPage.addEventListener('mousedown', (event) => {
-  clickOnButton(event);
+  if (event.target.hasAttribute('data-name')) {
+    currentPressedVirtual = event.target;
+    clickOnButton(currentPressedVirtual);
+  }
 });
 
 keyboardFromPage.addEventListener('mouseup', () => {

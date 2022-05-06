@@ -18,6 +18,7 @@ h1, .info {
     flex-wrap: wrap;
     gap: 5px;
     padding: 5px;
+    user-select:none;
 }
 
 .input {
