@@ -40,7 +40,6 @@ function renderKeyboard(buttonsObj, shift = false) {
 renderKeyboard(btnObjs);
 
 // работа с виртуальной клавиатурой
-const buttons = Array.from(document.querySelectorAll('div[data-name]'));
 const inputFieldFromHTML = document.querySelector('.input');
 inputFieldFromHTML.value = '';
 
@@ -98,10 +97,12 @@ function clickOnButton(button) {
       lang = 'en';
     } else lang = 'ru';
     renderKeyboard(btnObjs);
-  } else if (button.dataset.name !== 'ControlLeft' && button.dataset.name !== 'ShiftLeft') {
+  } else if (button.dataset.name !== 'ControlLeft' && button.dataset.name !== 'ShiftLeft' && button.dataset.name !== 'MetaLeft'
+  && button.dataset.name !== 'ControlRight' && button.dataset.name !== 'ShiftRight' && button.dataset.name !== 'AltLeft'
+  && button.dataset.name !== 'AltRight' && button.dataset.name !== 'CapsLock') {
     const inputString = inputFieldFromHTML.value.split('');
     const { selectionStart } = inputFieldFromHTML;
-    inputString.splice(selectionStart, 0, button.innerText);    
+    inputString.splice(selectionStart, 0, button.innerText);
     inputFieldFromHTML.value = inputString.join('');
     inputFieldFromHTML.focus();
     inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
