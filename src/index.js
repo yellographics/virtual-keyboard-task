@@ -4,8 +4,8 @@ import Keyboard from './Keyboard';
 import drawElement from './drawElement';
 import btnObjs from './buttonObjects';
 
-// задаем язык (пока захардкожено, после нужно будет подгружать из кэша)
-const lang = 'en';
+// задаем язык
+let lang = 'en';
 
 // создаем клавиатуру и рисуем все элементы для страницы
 const keyboard = new Keyboard('keyboard');
@@ -47,6 +47,7 @@ inputFieldFromHTML.value = '';
 // переменная для отслеживания нажатой с виртуальной и реальной клавиатур
 let currentPressedVirtual = null;
 let currentPressedReal = null;
+let isLeftShift = false;
 
 // функция клика по кнопке
 function clickOnButton(button) {
@@ -57,15 +58,14 @@ function clickOnButton(button) {
     inputString.splice(selectionStart, 0, ' ');
     inputFieldFromHTML.value = inputString.join('');
     inputFieldFromHTML.focus();
-    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);    
+    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
   } else if (button.dataset.name === 'Enter') {
     const inputString = inputFieldFromHTML.value.split('');
     const { selectionStart } = inputFieldFromHTML;
     inputString.splice(selectionStart, 0, '\r\n');
     inputFieldFromHTML.value = inputString.join('');
     inputFieldFromHTML.focus();
-    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1); 
-    //inputFieldFromHTML.value += '\r\n';
+    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
   } else if (button.dataset.name === 'Backspace') {
     const inputString = inputFieldFromHTML.value.split('');
     const { selectionStart } = inputFieldFromHTML;
@@ -75,10 +75,33 @@ function clickOnButton(button) {
       inputFieldFromHTML.focus();
       inputFieldFromHTML.setSelectionRange(selectionStart - 1, selectionStart - 1);
     }
-  } else {
+  } else if (button.dataset.name === 'Delete') {
     const inputString = inputFieldFromHTML.value.split('');
     const { selectionStart } = inputFieldFromHTML;
-    inputString.splice(selectionStart, 0, button.innerText);
+    if (selectionStart < inputString.length) {
+      inputString.splice(selectionStart, 1);
+      inputFieldFromHTML.value = inputString.join('');
+      inputFieldFromHTML.focus();
+      inputFieldFromHTML.setSelectionRange(selectionStart, selectionStart);
+    }
+  } else if (button.dataset.name === 'Tab') {
+    const inputString = inputFieldFromHTML.value.split('');
+    const { selectionStart } = inputFieldFromHTML;
+    inputString.splice(selectionStart, 0, '\t');
+    inputFieldFromHTML.value = inputString.join('');
+    inputFieldFromHTML.focus();
+    inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
+  } else if (button.dataset.name === 'ShiftLeft') {
+    isLeftShift = true;
+  } else if (button.dataset.name === 'ControlLeft' && isLeftShift) {
+    if (lang === 'ru') {
+      lang = 'en';
+    } else lang = 'ru';
+    renderKeyboard(btnObjs);
+  } else if (button.dataset.name !== 'ControlLeft' && button.dataset.name !== 'ShiftLeft') {
+    const inputString = inputFieldFromHTML.value.split('');
+    const { selectionStart } = inputFieldFromHTML;
+    inputString.splice(selectionStart, 0, button.innerText);    
     inputFieldFromHTML.value = inputString.join('');
     inputFieldFromHTML.focus();
     inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
@@ -88,6 +111,9 @@ function clickOnButton(button) {
 // функция отжатия кнопки
 function unclickButton(button) {
   button.classList.remove('button-active');
+  if (button.dataset.name === 'ShiftLeft') {
+    isLeftShift = false;
+  }
 }
 
 // слушатели на события с виртуальной и реальной клавиатуры
@@ -104,11 +130,13 @@ keyboardFromPage.addEventListener('mouseup', () => {
 
 document.addEventListener('keydown', (event) => {
   event.preventDefault();
+  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
   currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
   clickOnButton(currentPressedReal);
 });
 
 document.addEventListener('keyup', (event) => {
+  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
   currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
   unclickButton(currentPressedReal);
 });
