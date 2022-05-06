@@ -7,6 +7,23 @@ import btnObjs from './buttonObjects';
 // задаем язык
 let lang = 'en';
 
+
+ function setLocalStorage() {
+   localStorage.setItem('lang', lang);    
+ }
+
+ window.addEventListener('beforeunload', setLocalStorage);
+
+ function getLocalStorage() {
+   if (localStorage.getItem('lang')) {
+       lang = localStorage.getItem('lang');                
+   }    
+ }
+ window.addEventListener('load', () => {
+   getLocalStorage();
+   renderKeyboard(btnObjs);
+  })
+
 // создаем клавиатуру и рисуем все элементы для страницы
 const keyboard = new Keyboard('keyboard');
 const keyboardHTML = keyboard.createKeyboard();
@@ -42,7 +59,7 @@ function renderKeyboard(buttonsObj, action) {
   }
 }
 
-renderKeyboard(btnObjs);
+//renderKeyboard(btnObjs);
 
 // работа с виртуальной клавиатурой
 const inputFieldFromHTML = document.querySelector('.input');
@@ -101,8 +118,10 @@ function clickOnButton(button) {
     renderKeyboard(btnObjs, 'shift');
   } else if (button.dataset.name === 'ControlLeft' && isLeftShift) {
     if (lang === 'ru') {
-      lang = 'en';
-    } else lang = 'ru';
+      lang = 'en';           
+    } else {
+      lang = 'ru';      
+    }
     if (!isCapsLock) {
       renderKeyboard(btnObjs);
     } else {
@@ -132,10 +151,12 @@ function clickOnButton(button) {
 function unclickButton(button) {
   button.classList.remove('button-active');
   if (button.dataset.name === 'ShiftLeft' || button.dataset.name === 'ShiftRight') {
-    if(button.dataset.name === 'ShiftLeft'){
+    if (button.dataset.name === 'ShiftLeft') {
       isLeftShift = false;
     }
-    renderKeyboard(btnObjs);
+    if(isCapsLock){
+      renderKeyboard(btnObjs, 'capslock');
+    } else renderKeyboard(btnObjs);
   }
 }
 
