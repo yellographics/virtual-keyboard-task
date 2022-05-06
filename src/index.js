@@ -13,7 +13,7 @@ const keyboardHTML = keyboard.createKeyboard();
 
 const inputField = '<textarea class="input" autofocus></textarea>';
 const h1 = '<h1>Virtual Keyboard</h1>';
-const info = '<p>This keyboard is created in Windows.<br> To swicth languages use <b>LeftShift+LeftCtrl</b></p>';
+const info = '<p>This keyboard is created in Windows.<br> To swicth languages use <b>LeftShift + LeftCtrl</b></p>';
 
 const pageElements = [h1, inputField, keyboardHTML, info];
 pageElements.forEach((elem) => drawElement(elem));
@@ -22,12 +22,17 @@ pageElements.forEach((elem) => drawElement(elem));
 const keyboardFromPage = document.querySelector('#keyboard');
 
 // создаем функцию рендера кнопок внутри клавиатуры и рендерим ее
-function renderKeyboard(buttonsObj, shift = false) {
-  if (shift === true) {
+function renderKeyboard(buttonsObj, action) {
+  if (action === 'Shift') {
     const langShift = `${lang}Shift`;
     keyboardFromPage.innerHTML = '';
     buttonsObj.forEach((button) => {
       keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift] ? button[langShift] : button[lang].toUpperCase()}</div>`;
+    });
+  } else if (action === 'capslock') {
+    keyboardFromPage.innerHTML = '';
+    buttonsObj.forEach((button) => {
+      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${(button.name.startsWith('Key') || button.name.startsWith('Backquote')) ? button[lang].toUpperCase() : button[lang]}</div>`;
     });
   } else {
     keyboardFromPage.innerHTML = '';
@@ -47,6 +52,7 @@ inputFieldFromHTML.value = '';
 let currentPressedVirtual = null;
 let currentPressedReal = null;
 let isLeftShift = false;
+let isCapsLock = false;
 
 // функция клика по кнопке
 function clickOnButton(button) {
@@ -96,10 +102,22 @@ function clickOnButton(button) {
     if (lang === 'ru') {
       lang = 'en';
     } else lang = 'ru';
-    renderKeyboard(btnObjs);
+    if (!isCapsLock) {
+      renderKeyboard(btnObjs);
+    } else {
+      renderKeyboard(btnObjs, 'capslock');
+    }
+  } else if (button.dataset.name === 'CapsLock') {
+    if (!isCapsLock) {
+      isCapsLock = true;
+      renderKeyboard(btnObjs, 'capslock');
+    } else {
+      isCapsLock = false;
+      renderKeyboard(btnObjs);
+    }
   } else if (button.dataset.name !== 'ControlLeft' && button.dataset.name !== 'ShiftLeft' && button.dataset.name !== 'MetaLeft'
   && button.dataset.name !== 'ControlRight' && button.dataset.name !== 'ShiftRight' && button.dataset.name !== 'AltLeft'
-  && button.dataset.name !== 'AltRight' && button.dataset.name !== 'CapsLock') {
+  && button.dataset.name !== 'AltRight') {
     const inputString = inputFieldFromHTML.value.split('');
     const { selectionStart } = inputFieldFromHTML;
     inputString.splice(selectionStart, 0, button.innerText);
