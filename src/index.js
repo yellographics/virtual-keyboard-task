@@ -7,23 +7,6 @@ import btnObjs from './buttonObjects';
 // задаем язык
 let lang = 'en';
 
-
- function setLocalStorage() {
-   localStorage.setItem('lang', lang);    
- }
-
- window.addEventListener('beforeunload', setLocalStorage);
-
- function getLocalStorage() {
-   if (localStorage.getItem('lang')) {
-       lang = localStorage.getItem('lang');                
-   }    
- }
- window.addEventListener('load', () => {
-   getLocalStorage();
-   renderKeyboard(btnObjs);
-  })
-
 // создаем клавиатуру и рисуем все элементы для страницы
 const keyboard = new Keyboard('keyboard');
 const keyboardHTML = keyboard.createKeyboard();
@@ -44,12 +27,14 @@ function renderKeyboard(buttonsObj, action) {
     const langShift = `${lang}Shift`;
     keyboardFromPage.innerHTML = '';
     buttonsObj.forEach((button) => {
-      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift] ? button[langShift] : button.name.startsWith('Key') ? button[lang].toUpperCase() : button[lang]}</div>`;
+      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift] ? button[langShift] : (button.name.startsWith('Key') || button.name.startsWith('Backquote') || button.name.startsWith('Bracket')
+      || button.name.startsWith('Semicolon') || button.name.startsWith('Quote') || button.name.startsWith('Comma') || button.name.startsWith('Period')) ? button[lang].toUpperCase() : button[lang]}</div>`;
     });
   } else if (action === 'capslock') {
     keyboardFromPage.innerHTML = '';
     buttonsObj.forEach((button) => {
-      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${(button.name.startsWith('Key') || button.name.startsWith('Backquote')) ? button[lang].toUpperCase() : button[lang]}</div>`;
+      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${(button.name.startsWith('Key') || button.name.startsWith('Backquote') || button.name.startsWith('Bracket')
+      || button.name.startsWith('Semicolon') || button.name.startsWith('Quote') || button.name.startsWith('Comma') || button.name.startsWith('Period')) ? button[lang].toUpperCase() : button[lang]}</div>`;
     });
   } else {
     keyboardFromPage.innerHTML = '';
@@ -58,8 +43,6 @@ function renderKeyboard(buttonsObj, action) {
     });
   }
 }
-
-//renderKeyboard(btnObjs);
 
 // работа с виртуальной клавиатурой
 const inputFieldFromHTML = document.querySelector('.input');
@@ -114,26 +97,46 @@ function clickOnButton(button) {
     inputFieldFromHTML.focus();
     inputFieldFromHTML.setSelectionRange(selectionStart + 1, selectionStart + 1);
   } else if (button.dataset.name === 'ShiftLeft' || button.dataset.name === 'ShiftRight') {
-    if (button.dataset.name === 'ShiftLeft') { isLeftShift = true; }
-    renderKeyboard(btnObjs, 'shift');
+    if (button.dataset.name === 'ShiftLeft') {
+      isLeftShift = true;
+      renderKeyboard(btnObjs, 'shift');
+      const shift = document.querySelector('[data-name="ShiftLeft"]');
+      shift.classList.add('button-active');
+    } else {
+      renderKeyboard(btnObjs, 'shift');
+      const shift = document.querySelector('[data-name="ShiftRight"]');
+      shift.classList.add('button-active');
+    }
   } else if (button.dataset.name === 'ControlLeft' && isLeftShift) {
     if (lang === 'ru') {
-      lang = 'en';           
+      lang = 'en';
     } else {
-      lang = 'ru';      
+      lang = 'ru';
     }
     if (!isCapsLock) {
       renderKeyboard(btnObjs);
+      const control = document.querySelector('[data-name="ControlLeft"]');
+      control.classList.add('button-active');
+      const shift = document.querySelector('[data-name="ShiftLeft"]');
+      shift.classList.add('button-active');
     } else {
       renderKeyboard(btnObjs, 'capslock');
+      const control = document.querySelector('[data-name="ControlLeft"]');
+      control.classList.add('button-active');
+      const shift = document.querySelector('[data-name="ShiftLeft"]');
+      shift.classList.add('button-active');
     }
   } else if (button.dataset.name === 'CapsLock') {
     if (!isCapsLock) {
       isCapsLock = true;
       renderKeyboard(btnObjs, 'capslock');
+      const capslock = document.querySelector('[data-name="CapsLock"]');
+      capslock.classList.add('button-active');
     } else {
       isCapsLock = false;
       renderKeyboard(btnObjs);
+      //const capslock = document.querySelector('[data-name="CapsLock"]');
+      //capslock.classList.add('button-active');
     }
   } else if (button.dataset.name !== 'ControlLeft' && button.dataset.name !== 'ShiftLeft' && button.dataset.name !== 'MetaLeft'
   && button.dataset.name !== 'ControlRight' && button.dataset.name !== 'ShiftRight' && button.dataset.name !== 'AltLeft'
@@ -154,8 +157,9 @@ function unclickButton(button) {
     if (button.dataset.name === 'ShiftLeft') {
       isLeftShift = false;
     }
-    if(isCapsLock){
-      renderKeyboard(btnObjs, 'capslock');
+    if (isCapsLock) {
+      isCapsLock = false;
+      renderKeyboard(btnObjs, 'capslock');       
     } else renderKeyboard(btnObjs);
   }
 }
@@ -183,4 +187,21 @@ document.addEventListener('keyup', (event) => {
   const buttons = Array.from(document.querySelectorAll('div[data-name]'));
   currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
   unclickButton(currentPressedReal);
+});
+
+// работа с localStorage
+function setLocalStorage() {
+  localStorage.setItem('lang', lang);
+}
+
+window.addEventListener('beforeunload', setLocalStorage);
+
+function getLocalStorage() {
+  if (localStorage.getItem('lang')) {
+    lang = localStorage.getItem('lang');
+  }
+}
+window.addEventListener('load', () => {
+  getLocalStorage();
+  renderKeyboard(btnObjs);
 });

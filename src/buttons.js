@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export const btnArray = [
   {
-    name: 'Backquote', ru: 'ё', en: '`', ruShift: '~', enShift: '~',
+    name: 'Backquote', ru: 'ё', en: '`', enShift: '~',
   },
   {
     name: 'Digit1', ru: '1', en: '1', ruShift: '!', enShift: '!',
