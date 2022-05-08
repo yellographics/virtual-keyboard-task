@@ -27,8 +27,12 @@ function renderKeyboard(buttonsObj, action) {
     const langShift = `${lang}Shift`;
     keyboardFromPage.innerHTML = '';
     buttonsObj.forEach((button) => {
-      keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift] ? button[langShift] : (button.name.startsWith('Key') || button.name.startsWith('Backquote') || button.name.startsWith('Bracket')
-      || button.name.startsWith('Semicolon') || button.name.startsWith('Quote') || button.name.startsWith('Comma') || button.name.startsWith('Period')) ? button[lang].toUpperCase() : button[lang]}</div>`;
+      if (button[langShift]) {
+        keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[langShift]}</div>`;
+      } else if ((button.name.startsWith('Key') || button.name.startsWith('Backquote') || button.name.startsWith('Bracket')
+      || button.name.startsWith('Semicolon') || button.name.startsWith('Quote') || button.name.startsWith('Comma') || button.name.startsWith('Period'))) {
+        keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[lang].toUpperCase()}</div>`;
+      } else keyboardFromPage.innerHTML += `<div class="${button.className}" data-name=${button.name}>${button[lang]}</div>`;
     });
   } else if (action === 'capslock') {
     keyboardFromPage.innerHTML = '';
@@ -100,6 +104,7 @@ function clickOnButton(button) {
     if (button.dataset.name === 'ShiftLeft') {
       isLeftShift = true;
       renderKeyboard(btnObjs, 'shift');
+
       const shift = document.querySelector('[data-name="ShiftLeft"]');
       shift.classList.add('button-active');
     } else {
@@ -135,8 +140,8 @@ function clickOnButton(button) {
     } else {
       isCapsLock = false;
       renderKeyboard(btnObjs);
-      //const capslock = document.querySelector('[data-name="CapsLock"]');
-      //capslock.classList.add('button-active');
+      const capslock = document.querySelector('[data-name="CapsLock"]');
+      capslock.classList.add('button-active');
     }
   } else if (button.dataset.name !== 'ControlLeft' && button.dataset.name !== 'ShiftLeft' && button.dataset.name !== 'MetaLeft'
   && button.dataset.name !== 'ControlRight' && button.dataset.name !== 'ShiftRight' && button.dataset.name !== 'AltLeft'
@@ -156,11 +161,17 @@ function unclickButton(button) {
   if (button.dataset.name === 'ShiftLeft' || button.dataset.name === 'ShiftRight') {
     if (button.dataset.name === 'ShiftLeft') {
       isLeftShift = false;
+      if (isCapsLock) {
+        renderKeyboard(btnObjs, 'capslock');
+      } else renderKeyboard(btnObjs);
     }
+  }
+  if (button.dataset.name === 'CapsLock') {
     if (isCapsLock) {
-      isCapsLock = false;
-      renderKeyboard(btnObjs, 'capslock');       
-    } else renderKeyboard(btnObjs);
+      renderKeyboard(btnObjs, 'capslock');
+    } else {
+      renderKeyboard(btnObjs);
+    }
   }
 }
 
