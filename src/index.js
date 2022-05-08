@@ -104,7 +104,6 @@ function clickOnButton(button) {
     if (button.dataset.name === 'ShiftLeft') {
       isLeftShift = true;
       renderKeyboard(btnObjs, 'shift');
-
       const shift = document.querySelector('[data-name="ShiftLeft"]');
       shift.classList.add('button-active');
     } else {
@@ -161,10 +160,10 @@ function unclickButton(button) {
   if (button.dataset.name === 'ShiftLeft' || button.dataset.name === 'ShiftRight') {
     if (button.dataset.name === 'ShiftLeft') {
       isLeftShift = false;
-      if (isCapsLock) {
-        renderKeyboard(btnObjs, 'capslock');
-      } else renderKeyboard(btnObjs);
     }
+    if (isCapsLock) {
+      renderKeyboard(btnObjs, 'capslock');
+    } else renderKeyboard(btnObjs);
   }
   if (button.dataset.name === 'CapsLock') {
     if (isCapsLock) {
