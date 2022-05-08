@@ -3,6 +3,7 @@ import './style.css';
 import Keyboard from './Keyboard';
 import drawElement from './drawElement';
 import btnObjs from './buttonObjects';
+import { btnArray } from './buttons';
 
 // задаем язык
 let lang = 'en';
@@ -187,16 +188,20 @@ keyboardFromPage.addEventListener('mouseup', () => {
 });
 
 document.addEventListener('keydown', (event) => {
-  event.preventDefault();
-  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
-  currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
-  clickOnButton(currentPressedReal);
+  if (btnArray.find((button) => button.name === event.code)) {
+    event.preventDefault();
+    const buttons = Array.from(document.querySelectorAll('div[data-name]'));
+    currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
+    clickOnButton(currentPressedReal);
+  }
 });
 
 document.addEventListener('keyup', (event) => {
-  const buttons = Array.from(document.querySelectorAll('div[data-name]'));
-  currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
-  unclickButton(currentPressedReal);
+  if (btnArray.find((button) => button.name === event.code)) {
+    const buttons = Array.from(document.querySelectorAll('div[data-name]'));
+    currentPressedReal = buttons.find((item) => item.dataset.name === event.code);
+    unclickButton(currentPressedReal);
+  }
 });
 
 // работа с localStorage
